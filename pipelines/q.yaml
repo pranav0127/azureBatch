@@ -1,0 +1,18 @@
+# To publish an application into Azure Batch, we need to
+# first zip the file, and then publish an artifact, so that
+# we can take the necessary steps in our release pipeline.
+steps:
+# First, we Zip up the files required in the Batch Account
+# For this instance, those are the ffmpeg files
+- task: ArchiveFiles@2
+  displayName: 'Archive applications'
+  inputs:
+    rootFolderOrFile: hpc-application
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/package/$(Build.BuildId).zip'
+# Publish that zip file, so that we can use it as part
+# of our Release Pipeline later
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'hpc-application'
+    targetPath: '$(Build.ArtifactStagingDirectory)/package'
